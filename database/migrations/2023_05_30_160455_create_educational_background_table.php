@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('end_date');
             $table->float('gpa');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

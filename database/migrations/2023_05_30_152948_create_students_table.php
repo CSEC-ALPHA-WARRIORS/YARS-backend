@@ -16,10 +16,12 @@ return new class extends Migration
             $table->string('fname');
             $table->string('mname');
             $table->string('lname');
+            $table->string('profile_picture_url');
             $table->string('email')->unique();
             $table->string('phonenumber');
             $table->string('password');
             $table->string('type')->default('Regular');
+            $table->timestamps();
         });
     }
 

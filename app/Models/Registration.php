@@ -15,6 +15,6 @@ class Registration extends Model
         'semester',
         'program',
         'level',
-        'gpa'
+        'registered_at'
     ];
 }

@@ -13,6 +13,7 @@ class Students extends Model
         'fname',
         'mname',
         'lname', 
+        'profile_picture_url',
         'email', 
         'phonenumber',
         'password',

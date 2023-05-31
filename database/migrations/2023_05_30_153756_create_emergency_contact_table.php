@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('phonenumber');
             $table->string('relationship');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('status');
             $table->string('receipt_url');
             $table->foreign('registration_id')->references('id')->on('registration')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

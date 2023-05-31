@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('registration', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('student_id');
-            $table->integer('year');
-            $table->date('semester');
-            $table->date('program');
+            $table->string('year');
+            $table->string('semester');
+            $table->string('program');
             $table->string('level');
-            $table->float('gpa');
+            $table->date('registered_at');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
