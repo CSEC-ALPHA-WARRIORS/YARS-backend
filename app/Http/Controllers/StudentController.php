@@ -11,6 +11,7 @@ use App\Models\EducationalBackground;
 use App\Models\EmergencyContact;
 use App\Models\Registration;
 use App\Models\Students;
+use App\Models\Courses;
 
 class StudentController extends Controller
 {
@@ -88,12 +89,21 @@ class StudentController extends Controller
 
         $new_registration = Registration::create($registration);
 
+        $courses = Courses::where(
+            [
+                ['year', $new_registration['year']],
+                ['semester', $new_registration['semester']],
+                ['program', $new_registration['program']]
+           ]
+        )->get();
+
         $response = [
             'student' => $new_student,
             'address' => $new_address,
             'educational_background' => $new_educational_background,
             'emergency_contact' => $new_emergency_contact,
-            'registration' => $new_registration
+            'registration' => $new_registration,
+            'courses' => $courses
         ];
 
         return response($response, 201);
