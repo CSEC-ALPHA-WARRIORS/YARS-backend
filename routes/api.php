@@ -21,3 +21,4 @@ Route::post('/register', [StudentController::class, 'register']);
 
 Route::post('/course/add', [AdminController::class, 'addCourse']);
 
+Route::get('/registrations/{id}', [StudentController::class, 'getRegistration']);

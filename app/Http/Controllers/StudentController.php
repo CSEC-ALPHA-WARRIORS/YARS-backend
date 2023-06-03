@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use Carbon\Carbon;
-
 use App\Models\Address;
 use App\Models\EducationalBackground;
 use App\Models\EmergencyContact;
 use App\Models\Registration;
 use App\Models\Students;
 use App\Models\Courses;
+use App\Models\Payment;
+
+use Chapa\Chapa;
+use Chapa\Exception\InvalidPostDataException;
+use Chapa\Model\PostData;
+use Chapa\Util;
 
 class StudentController extends Controller
 {
@@ -109,7 +113,55 @@ class StudentController extends Controller
         return response($response, 201);
     }
 
+    public function pay(Request $request) {
+        $request->validate([
+            'registration_id' => 'required',
+            'amount' => 'required',
+            'paid_at' => 'required',
+            'type' => 'required',
+            'status' => 'required',
+            'receipt_url' => 'required'
+        ]); 
+
+        $chapa = new Chapa('{your-secrete-key}');
+        $transactionRef = Util::generateToken();
+        $postData = new PostData();
+        $postData->amount('100')
+            ->currency('ETB')
+            ->email('abebe@bikila.com')
+            ->firstname('test')
+            ->lastname('user')
+            ->transactionRef($transactionRef)
+            ->callbackUrl('https://chapa.co')
+            ->customizations(
+                array(
+                    'customization[title]' => 'YARS',
+                    'customization[description]' => 'It is time to pay'
+                )
+            );
+
+        $response1 = $chapa->initialize($postData);
+        print_r($response1->getMessage());
+        print_r($response1->getStatus());
+        print_r($response1->getData());
+        // echo $response1->getRawJson();
+        
+        $response2 = $chapa->verify($transactionRef);
+        if($response2->getStatusCode() == 200){
+            echo 'Payment not verified because ' . $response2->getMessage()['message'];
+        }
+
+        return Payment::create($request->all());
+    }
+
+    public function getRegistration(string $id) {
+        echo $id;
+        return Registration::where([['student_id', $id]])->get();
+    }
+
     public function update(Request $request, string $id) {
         
     }
+
+    
 }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('paid_at');
             $table->string('type');
             $table->string('status');
-            $table->string('receipt_url');
+            $table->string('receipt_url')->nullable();
             $table->foreign('registration_id')->references('id')->on('registrations')->onDelete('cascade');
             $table->timestamps();
         });
