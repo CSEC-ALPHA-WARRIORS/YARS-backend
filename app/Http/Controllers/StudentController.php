@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Address;
@@ -57,6 +58,7 @@ class StudentController extends Controller
             'student_id' => $new_student['id'] 
         ];
 
+        $token = $new_student->createToken("mytoken")->plainTextToken;
        
         $new_address = Address::create($address);
 
@@ -102,12 +104,38 @@ class StudentController extends Controller
         )->get();
 
         $response = [
+            'token' => $token,
             'student' => $new_student,
             'address' => $new_address,
             'educational_background' => $new_educational_background,
             'emergency_contact' => $new_emergency_contact,
             'registration' => $new_registration,
             'courses' => $courses
+        ];
+
+        return response($response, 201);
+    }
+
+    public function login(Request $request) 
+    {
+        $fields = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $student = Students::where('email', $fields['email'])->first();
+
+        if(!$student || !Hash::check($fields['password'], $student->password)) {
+            return response([
+                'message' => 'Invalid credentials!!'
+            ], 401);
+        }
+
+        $token = $student->createToken("mytoken")->plainTextToken;
+
+        $response = [
+            'student' => $student,
+            'token' => $token
         ];
 
         return response($response, 201);
@@ -155,13 +183,7 @@ class StudentController extends Controller
     }
 
     public function getRegistration(string $id) {
-        echo $id;
         return Registration::where([['student_id', $id]])->get();
     }
 
-    public function update(Request $request, string $id) {
-        
-    }
-
-    
 }

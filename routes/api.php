@@ -6,19 +6,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AdminController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+// Student routes
 
 Route::post('/register', [StudentController::class, 'register']);
 
-Route::post('/course/add', [AdminController::class, 'addCourse']);
+Route::post('/login', [StudentController::class, 'login']);
 
-Route::get('/registrations/{id}', [StudentController::class, 'getRegistration']);
+Route::group(['middleware' => ['auth:sanctum']], function() {
+    Route::get('/registrations/{id}', [StudentController::class, 'getRegistration']);
+});
+
+// Admin routes
+
+Route::post('/course/add', [AdminController::class, 'addCourse']);

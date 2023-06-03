@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\StudentTypeEnum;
+use Laravel\Sanctum\HasApiTokens;
 
 class Students extends Model
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens;
     protected $fillable = [
         'fname',
         'mname',
