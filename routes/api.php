@@ -18,4 +18,17 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
 // Admin routes
 
-Route::post('/course/add', [AdminController::class, 'addCourse']);
+Route::post('/admin/login', [AdminController::class, 'login']);
+
+Route::group(['middleware' => ['auth:sanctum']], function() {
+    Route::post('/admin/add', [AdminController::class, 'addAdmin']);
+
+    Route::post('/course/add', [AdminController::class, 'addCourse']);
+
+    Route::get('/students', [AdminController::class, 'getStudents']);
+
+    Route::get('/registrations', [AdminController::class, 'getRegistrations']);
+
+    Route::get('/payments', [AdminController::class, 'getPayments']);
+});
+

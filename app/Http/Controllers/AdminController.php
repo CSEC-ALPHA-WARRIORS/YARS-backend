@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
+use App\Models\Admin;
 use App\Models\Students;
 use App\Models\Payment;
 use App\Models\Registration;
@@ -11,6 +13,31 @@ use App\Models\Courses;
 
 class AdminController extends Controller
 {
+
+    public function login(Request $request) 
+    {
+        $fields = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $admin = Admin::where('email', $fields['email'])->first();
+
+        if(!$admin || !Hash::check($fields['password'], $admin->password)) {
+            return response([
+                'message' => 'Invalid credentials!!'
+            ], 401);
+        }
+
+        $token = $admin->createToken("mytoken")->plainTextToken;
+
+        $response = [
+            'admin' => $admin,
+            'token' => $token
+        ];
+
+        return response($response, 201);
+    }
 
     function addCourse(Request $request) {
         $request->validate([
@@ -26,6 +53,30 @@ class AdminController extends Controller
 
     function addAdmin(Request $request) {
 
+        $token = $request->bearerToken();
+
+        // TODO: check admin role
+
+        $request->validate([
+            'fname' => 'required',
+            'mname' => 'required',
+            'lname' => 'required', 
+            'email' => 'required', 
+            'phonenumber' => 'required',
+            'role' => 'required'
+        ]);
+
+        $data = [
+            'fname' => $request['fname'],
+            'mname' => $request['mname'],
+            'lname' => $request['lname'], 
+            'email' => $request['email'], 
+            'phonenumber' => $request['phonenumber'],
+            'password' => password_hash($request['fname'].$request['lname'], PASSWORD_DEFAULT),
+            'role' => $request['role']
+        ];
+
+        return Admin::create($data);
     }
 
     function getStudents() {
@@ -40,11 +91,7 @@ class AdminController extends Controller
         return Payment::all();
     }
 
-    function addPayment(Request $request) {
-
-    }
-
-    function verifyRegistration(string $id) {
+    function verifyPayment(Request $request) {
 
     }
 }
