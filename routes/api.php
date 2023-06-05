@@ -40,3 +40,8 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::delete('/admin/remove/{id}', [AdminController::class, 'removeAdmin']);
 });
 
+// chapa callback route
+
+Route::get('callback/{reference}', 'App\Http\Controllers\ChapaController@callback')->name('callback');
+
+

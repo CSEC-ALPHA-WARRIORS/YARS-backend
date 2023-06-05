@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Http\Controllers\ChapaController;
 use App\Models\Address;
 use App\Models\EducationalBackground;
 use App\Models\EmergencyContact;
@@ -13,13 +14,11 @@ use App\Models\Students;
 use App\Models\Courses;
 use App\Models\Payment;
 
-use Chapa\Chapa;
-use Chapa\Exception\InvalidPostDataException;
-use Chapa\Model\PostData;
-use Chapa\Util;
+
 
 class StudentController extends Controller
 {
+
     public function register(Request $request) {
 
         $request->validate([
@@ -148,34 +147,14 @@ class StudentController extends Controller
             'type' => 'required',
         ]); 
         
+        $url = '';
+
+        $registration = Registration::find($request['registration_id']);
+        $student = Students::find($registration['student_id']);
+
         if($request['type'] == "chapa"){
-            $chapa = new Chapa('CHASECK_TEST-WcI7TGQPUKD6WOTvaqqOG3y4G653y6dP');
-            $transactionRef = Util::generateToken();
-            $postData = new PostData();
-            $postData->amount('100')
-                ->currency('ETB')
-                ->email('abebe@bikila.com')
-                ->firstname('test')
-                ->lastname('user')
-                ->transactionRef($transactionRef)
-                ->callbackUrl('https://chapa.co')
-                ->customizations(
-                    array(
-                        'customization[title]' => 'YARS',
-                        'customization[description]' => 'It is time to pay'
-                    )
-                );
-    
-            $response1 = $chapa->initialize($postData);
-            print_r($response1->getMessage());
-            print_r($response1->getStatus());
-            print_r($response1->getData());
-            // echo $response1->getRawJson();
-            
-            $response2 = $chapa->verify($transactionRef);
-            if($response2->getStatusCode() == 200){
-                echo 'Payment not verified because ' . $response2->getMessage()['message'];
-            }
+            $chapa = new ChapaController();
+            $url = $chapa->initialize($request['amount'], $student['email'], $student['fname'], $student['email']);
         }
 
         $mytime = Carbon::now();
@@ -186,10 +165,15 @@ class StudentController extends Controller
             'paid_at' => $mytime->toDateTimeString(),
             'type' => $request['type'],
             'status' => 'pending',
-            'receipt_url' => isset($request['receipt_url']) ? isset($request['receipt_url']) : ''
+            'receipt_url' => isset($request['receipt_url']) ? isset($request['receipt_url']) 
+                             : 'http://localhost:8000/api/callback/'.explode(' ', $url)[1]
         ];
 
-        return Payment::create($data);
+        $payment = Payment::create($data);
+        return response([
+            'url' => explode(' ', $url)[0],
+            'pdata' => $payment
+        ]);
     }
 
     public function getRegistration(string $id) {
