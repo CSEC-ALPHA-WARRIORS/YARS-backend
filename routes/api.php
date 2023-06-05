@@ -14,6 +14,8 @@ Route::post('/login', [StudentController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/registrations/{id}', [StudentController::class, 'getRegistration']);
+
+    Route::post('/pay', [StudentController::class, 'pay']);
 });
 
 // Admin routes
@@ -27,8 +29,14 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
     Route::get('/students', [AdminController::class, 'getStudents']);
 
+    Route::get('/student/{id}', [AdminController::class, 'getStudentById']);
+
     Route::get('/registrations', [AdminController::class, 'getRegistrations']);
 
     Route::get('/payments', [AdminController::class, 'getPayments']);
+
+    Route::put('/payment/verify/{id}', [AdminController::class, 'verifyPayment']);
+
+    Route::delete('/admin/remove/{id}', [AdminController::class, 'removeAdmin']);
 });
 

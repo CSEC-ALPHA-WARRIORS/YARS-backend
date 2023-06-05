@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,6 +11,8 @@ use App\Models\Students;
 use App\Models\Payment;
 use App\Models\Registration;
 use App\Models\Courses;
+use App\Models\EducationalBackground;
+use App\Models\EmergencyContact;
 
 class AdminController extends Controller
 {
@@ -79,8 +82,37 @@ class AdminController extends Controller
         return Admin::create($data);
     }
 
+    function removeAdmin(string $id) {
+        return Admin::destroy($id);
+    }
+
     function getStudents() {
         return Students::all();
+    }
+
+    function getStudentById(string $id) {
+        $student = Students::find($id);
+        $address = Address::where([['student_id', $id]])->get();
+        $emergency_contact = EmergencyContact::where([['student_id', $id]])->get();
+        $educational_background = EducationalBackground::where([['student_id', $id]])->get();
+        $registrations = Registration::where([['student_id', $id]])->get();
+        $payments = [];
+
+        foreach($registrations as $reg){
+            $payment = Payment::where([['registration_id', $reg['id']]])->get();
+            array_push($payments, $payment);
+        }
+
+        $response = [
+            'basic_info' => $student,
+            'address' => $address,
+            'emergency_contact' => $emergency_contact,
+            'educational_background' => $educational_background,
+            'registrations' => $registrations,
+            'payments' => $payments
+        ];
+
+        return response($response);
     }
 
     function getRegistrations() {
@@ -91,7 +123,9 @@ class AdminController extends Controller
         return Payment::all();
     }
 
-    function verifyPayment(Request $request) {
-
+    function verifyPayment(string $id) {
+        $payment = Payment::find($id);
+        $payment->update(array('status' => 'verified'));
+        return $payment;
     }
 }

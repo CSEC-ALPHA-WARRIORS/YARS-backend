@@ -145,41 +145,51 @@ class StudentController extends Controller
         $request->validate([
             'registration_id' => 'required',
             'amount' => 'required',
-            'paid_at' => 'required',
             'type' => 'required',
-            'status' => 'required',
-            'receipt_url' => 'required'
         ]); 
-
-        $chapa = new Chapa('{your-secrete-key}');
-        $transactionRef = Util::generateToken();
-        $postData = new PostData();
-        $postData->amount('100')
-            ->currency('ETB')
-            ->email('abebe@bikila.com')
-            ->firstname('test')
-            ->lastname('user')
-            ->transactionRef($transactionRef)
-            ->callbackUrl('https://chapa.co')
-            ->customizations(
-                array(
-                    'customization[title]' => 'YARS',
-                    'customization[description]' => 'It is time to pay'
-                )
-            );
-
-        $response1 = $chapa->initialize($postData);
-        print_r($response1->getMessage());
-        print_r($response1->getStatus());
-        print_r($response1->getData());
-        // echo $response1->getRawJson();
         
-        $response2 = $chapa->verify($transactionRef);
-        if($response2->getStatusCode() == 200){
-            echo 'Payment not verified because ' . $response2->getMessage()['message'];
+        if($request['type'] == "chapa"){
+            $chapa = new Chapa('CHASECK_TEST-WcI7TGQPUKD6WOTvaqqOG3y4G653y6dP');
+            $transactionRef = Util::generateToken();
+            $postData = new PostData();
+            $postData->amount('100')
+                ->currency('ETB')
+                ->email('abebe@bikila.com')
+                ->firstname('test')
+                ->lastname('user')
+                ->transactionRef($transactionRef)
+                ->callbackUrl('https://chapa.co')
+                ->customizations(
+                    array(
+                        'customization[title]' => 'YARS',
+                        'customization[description]' => 'It is time to pay'
+                    )
+                );
+    
+            $response1 = $chapa->initialize($postData);
+            print_r($response1->getMessage());
+            print_r($response1->getStatus());
+            print_r($response1->getData());
+            // echo $response1->getRawJson();
+            
+            $response2 = $chapa->verify($transactionRef);
+            if($response2->getStatusCode() == 200){
+                echo 'Payment not verified because ' . $response2->getMessage()['message'];
+            }
         }
 
-        return Payment::create($request->all());
+        $mytime = Carbon::now();
+
+        $data = [
+            'registration_id' => $request['registration_id'],
+            'amount' => $request['amount'],
+            'paid_at' => $mytime->toDateTimeString(),
+            'type' => $request['type'],
+            'status' => 'pending',
+            'receipt_url' => isset($request['receipt_url']) ? isset($request['receipt_url']) : ''
+        ];
+
+        return Payment::create($data);
     }
 
     public function getRegistration(string $id) {

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('registration_id');
-            $table->decimal('amount', 5, 2);
+            $table->float('amount');
             $table->date('paid_at');
             $table->string('type');
             $table->string('status');
