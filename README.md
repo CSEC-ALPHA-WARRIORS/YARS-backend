@@ -1,66 +1,154 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Yet Another Registration System (YARS)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Backend app for Yet Another Registration System made by using laravel. 
 
-## About Laravel
+## Installation
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. Clonning the repo
+   
+   ```bash
+    git clone https://github.com/CSEC-ALPHA-WARRIORS/YARS-backend.git
+   ```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+2. Installing packages
+   
+   ```bash
+    cd YARS-backend && php composer.phar update
+    ```
+3. Connecting database
+   
+   ```.env
+   // storing DB config in .env file
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=YARS
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+4. Running
+    ```bash 
+    php artisan serve
+    ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Usage
 
-## Learning Laravel
+ -  base-url : http://localhost:8000/api
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+  ### Endpoints
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+| Endpoint         | Request Type | Headers                              | Body/ Param                                                                                | Response                                                                                  | URL                  |
+|------------------|--------------|--------------------------------------|--------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|----------------------|
+| Register         | POST         |                                      | Body : { <a href="#student">student</a>, <a href="#address">address</a>, <a href="#econtact">emergency_contact</a>,      <a href="#ebackground">educational_background</a>, <a href="#registration">registration</a> } | { <a href="#student">student</a>, <a href="#address">address</a>, <a href="#econtact">emergency_contact</a>,      <a href="#ebackground">educational_background</a>, <a href="#registration">registration</a>, token } | /register            |
+| Login            | POST         |                                      | Body: { email, password }                                                                  | { <a href="#student">student</a>, token }                                                                        | /login               |
+| GetRegistration  | GET          | { Authorization: `Bearer ${token}` } | Param: { student_id }                                                                      | [ <a href="#registration">registration</a> ]                                                                          | /registrations/{id}  |
+| PayWithChapa     | POST         | { Authorization: `Bearer ${token}` } | Body: { <a href="#payment">payment</a> }                                                                          | { <a href="#payment">payment</a> }                                                                               | /pay                 |
+| PayManually      | POST         | { Authorization: `Bearer ${token}` } | Body: { <a href="#payment">payment</a> }                                                                          | { <a href="#payment">payment</a> }                                                                               | /pay                 |
+| Admin Login      | POST         |                                      | Body: { email, password }                                                                  | { admin, token }                                                                          | /admin/login         |
+| AddAdmin         | POST         | { Authorization: `Bearer ${token}` } | Body: { <a href="#admin">admin</a> }                                                                            | { <a href="#admin">admin</a> }                                                                                 | /admin/add           |
+| AddCourse        | POST         | { Authorization: `Bearer ${token}` } | Body: { <a href="#course">course</a> }                                                                           | { <a href="#course">course</a> }                                                                                | /course/add          |
+| GetStudents      | GET          | { Authorization: `Bearer ${token}` } |                                                                                            | [ <a href="#student">student</a> ]                                                                               | /students            |
+| GetStudentById   | GET          | { Authorization: `Bearer ${token}` } | Param: { id }                                                                              | { <a href="#student">student</a> }                                                                               | /student/{id}        |
+| GetRegistrations | GET          | { Authorization: `Bearer ${token}` } |                                                                                            | [ <a href="#registration">registrations</a> ]                                                                         | /registrations       |
+| GetPayments      | GET          | { Authorization: `Bearer ${token}` } |                                                                                            | [ <a href="#payment">payment</a> ]                                                                              | /payments            |
+| VerifyPayment    | PUT          | { Authorization: `Bearer ${token}` } | Param: { id }                                                                              | { <a href="#payment">payment</a> }                                                                               | /payment/verify/{id} |
+| RemoveAdmin      | DELETE       | { Authorization: `Bearer ${token}` } | Param: { id }                                                                              | { integer (1 success) }                                                                   | /admin/remove/{id}   |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Models
 
-## Laravel Sponsors
+<h3 id="student">Student</h3>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```json
+    {
+        "fname": "first name",
+        "mname": "middle name",
+        "lname": "last name",
+        "profile_picture_url": "profile picture url",
+        "email": "email",
+        "phonenumber": "phone number",
+        "password": "password",
+        "type": "Regular or Extension",
+    }
+```
 
-### Premium Partners
+<h3 id="admin">Admin</h3>
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```json
+    {
+        "fname": "first name",
+        "mname": "middle name",
+        "lname": "last name",
+        "email": "email",
+        "phonenumber": "phone number",
+        "password": "password",
+        "role": "registrar_head or registrar_employee",
+    }
+```
 
-## Contributing
+<h3 id="address">Address</h3>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```json
+    {
+        "city": "city",
+        "woreda": "woreda",
+        "kebele": "kebele",
+        "house_no": "house number"
+    }
+```
+<h3 id="econtact">Emergency contact</h3>
 
-## Code of Conduct
+```json
+   {
+        "fname": "first name",
+        "mname": "middle name",
+        "lname": "last name",
+        "relationship": "parential relationship (mother, father or legal guardian)", 
+        "phonenumber": "phone number"
+   }
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+<h3 id="ebackground">Educational background</h3>
 
-## Security Vulnerabilities
+```json
+   {
+       "school_name": "school name",
+       "start_date": "start date",
+       "end_date": "end date",
+       "gpa": "gpa in form of float"
+   }
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+<h3 id="registration">Registration</h3>
 
-## License
+```json
+   {
+        "year": "year (1st - 5th)",
+        "semester": "semester (1st or 2nd)",
+        "program": "program or department",
+        "level": "BSC, Masters or Diploma",
+        "registered_at": "registration date"
+    }
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<h3 id="payment">Payment</h3>
+
+```json
+   {
+        "registration_id": "registration id",
+        "amount": "amount of money paid in the form of float",
+        "type": "chapa or manual"
+   }
+```
+
+<h3 id="course">Course</h3>
+
+```json
+   {
+        "title": "course title",
+        "code": "course code",
+        "year": "year (1st - 5th)",
+        "semester": "semester (1st or 2nd)",
+        "program": "program or department",
+        "credit_hours": "credit hours in terms of integer"
+   }
+```
