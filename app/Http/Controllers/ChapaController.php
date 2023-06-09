@@ -27,6 +27,7 @@ class ChapaController extends Controller
             'tx_ref' => $reference,
             'currency' => "ETB",
             'callback_url' => route('callback',[$reference]),
+            'return_url' => 'http://localhost:5173/payment-successful?status=completed',
             'first_name' => $fname,
             'last_name' => $lname,
             "customization" => [

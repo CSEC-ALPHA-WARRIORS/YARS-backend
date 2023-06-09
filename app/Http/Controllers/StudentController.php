@@ -47,6 +47,12 @@ class StudentController extends Controller
             'type' => $request->all()['type']
         ];
 
+        $count = Students::where('email', $basic_data['email'])->get();
+
+        if($count->count() > 0){
+            return response("User already exist!!", 402);
+        }
+
         $new_student = Students::create($basic_data);
 
         $address = [
@@ -154,7 +160,7 @@ class StudentController extends Controller
 
         if($request['type'] == "chapa"){
             $chapa = new ChapaController();
-            $url = $chapa->initialize($request['amount'], $student['email'], $student['fname'], $student['email']);
+            $url = $chapa->initialize($request['amount'], $student['email'], $student['fname'], $student['lname']);
         }
 
         $mytime = Carbon::now();
