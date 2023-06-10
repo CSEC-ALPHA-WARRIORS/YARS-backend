@@ -94,6 +94,13 @@ class AdminController extends Controller
         return Admin::create($data);
     }
 
+    function getAdmins(Request $request) {
+        $take = $request->query('take') ? $request->query('take') : 10;
+        $skip = $request->query('skip') ? $request->query('skip') : 0;
+
+        return DB::table('admins')->skip($skip)->take($take)->get();
+    }
+
     function removeAdmin(string $id) {
         return Admin::destroy($id);
     }

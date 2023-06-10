@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AdminController;
+use App\Models\Admin;
 
 // Student routes
 
@@ -28,6 +29,8 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('/course/add', [AdminController::class, 'addCourse']);
 
     Route::get('/courses', [AdminController::class, 'getCourses']);
+
+    Route::get('/admins', [AdminController::class, 'getAdmins']);
 
     Route::delete('/course/remove/{id}', [AdminController::class, 'removeCourse']);
 
