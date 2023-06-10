@@ -56,10 +56,14 @@ class AdminController extends Controller
     }
 
     function getCourses(Request $request) {
-        $limit = $request->query('limit');
-        $offset = $request->query('offset');
+        $take = $request->query('take') ? $request->query('take') : 10;
+        $skip = $request->query('skip') ? $request->query('skip') : 0;
 
-        return DB::table('courses')->skip($offset)->take($limit)->get();
+        return DB::table('courses')->skip($skip)->take($take)->get();
+    }
+
+    function removeCourse(Request $request, string $id) {
+        return Courses::destroy($id);
     }
 
     function addAdmin(Request $request) {
@@ -94,8 +98,11 @@ class AdminController extends Controller
         return Admin::destroy($id);
     }
 
-    function getStudents() {
-        return Students::all();
+    function getStudents(Request $request) {
+        $take = $request->query('take') ? $request->query('take') : 10;
+        $skip = $request->query('skip') ? $request->query('skip') : 0;
+
+        return DB::table('students')->skip($skip)->take($take)->get();
     }
 
     function getStudentById(string $id) {
@@ -123,12 +130,22 @@ class AdminController extends Controller
         return response($response);
     }
 
-    function getRegistrations() {
-        return Registration::all();
+    function getRegistrations(Request $request) {
+        $take = $request->query('take') ? $request->query('take') : 10;
+        $skip = $request->query('skip') ? $request->query('skip') : 0;
+        return DB::table('registrations')->skip($skip)->take($take)->get();
     }
 
-    function getPayments() {
-        return Payment::all();
+    function verifyRegistration(Request $request,string $id) {
+        $registration = Registration::find($id);
+        $registration->update(array('status' => 'verified'));
+        return $registration;
+    }
+
+    function getPayments(Request $request) {
+        $take = $request->query('take') ? $request->query('take') : 10;
+        $skip = $request->query('skip') ? $request->query('skip') : 0;
+        return DB::table('payments')->skip($skip)->take($take)->get();
     }
 
     function verifyPayment(string $id) {

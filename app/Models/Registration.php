@@ -14,6 +14,7 @@ class Registration extends Model
         'year',
         'semester',
         'program',
+        'status',
         'level',
         'registered_at'
     ];
