@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Admin;
 use App\Models\Students;
@@ -52,6 +53,13 @@ class AdminController extends Controller
             'credit_hours' => 'required'
         ]);
         return Courses::create($request->all());
+    }
+
+    function getCourses(Request $request) {
+        $limit = $request->query('limit');
+        $offset = $request->query('offset');
+
+        return DB::table('courses')->skip($offset)->take($limit)->get();
     }
 
     function addAdmin(Request $request) {

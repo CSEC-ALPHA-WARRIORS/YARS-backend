@@ -27,6 +27,8 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
     Route::post('/course/add', [AdminController::class, 'addCourse']);
 
+    Route::get('/courses', [AdminController::class, 'getCourses']);
+
     Route::get('/students', [AdminController::class, 'getStudents']);
 
     Route::get('/student/{id}', [AdminController::class, 'getStudentById']);

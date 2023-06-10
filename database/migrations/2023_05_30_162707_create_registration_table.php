@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('semester');
             $table->string('program');
             $table->string('level');
+            $table->string('status')->default('pending');
             $table->date('registered_at');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->timestamps();
