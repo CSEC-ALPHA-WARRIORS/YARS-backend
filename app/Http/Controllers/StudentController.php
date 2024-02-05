@@ -194,4 +194,8 @@ class StudentController extends Controller
         $payment->update(array('status' => 'verified'));
         return $payment;
     }
+
+    function destroy(string $id) {
+        return Students::destroy($id);
+    }
 }

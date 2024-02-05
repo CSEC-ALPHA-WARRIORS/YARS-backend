@@ -39,6 +39,8 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/students', [AdminController::class, 'getStudents']);
 
     Route::get('/student/{id}', [AdminController::class, 'getStudentById']);
+    
+    Route::delete('/student/remove/{id}', [StudentController::class, 'destroy']);
 
     Route::get('/registrations', [AdminController::class, 'getRegistrations']);
 
