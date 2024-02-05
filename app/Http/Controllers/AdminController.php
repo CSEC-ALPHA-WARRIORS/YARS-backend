@@ -164,6 +164,6 @@ class AdminController extends Controller
     function updateCourse(Request $request, string $id) {
         $course = Courses::find($id);
         $course->update($request->all());
-        return Corses::find($id);
+        return Courses::find($id);
     }
 }
