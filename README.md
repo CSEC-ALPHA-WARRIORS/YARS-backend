@@ -2,6 +2,18 @@
 
 Backend app for Yet Another Registration System made by using laravel. 
 
+## Group Members
+
+| ID | Name |
+|:----|------|
+| UGR/22574/13 | Abel Wendemu |
+| UGR/22505/13 | Besufikad Micheal |
+| UGR/22779/13 | Eden Birhan |
+| UGR/22512/13 | Ephrem Getachew |
+| UGR/22527/13 | Naol Chala |
+| UGR/22734/13 | Samuel Teklemariam |
+
+
 ## Installation
 
 1. Clonning the repo
