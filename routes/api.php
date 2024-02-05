@@ -17,8 +17,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/registrations/{id}', [StudentController::class, 'getRegistration']);
 
     Route::post('/pay', [StudentController::class, 'pay']);
-
-    Route::put('/verify/{id}', [StudentController::class, 'verifyPayment']);
 });
 
 // Admin routes
@@ -32,6 +30,8 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
     Route::get('/courses', [AdminController::class, 'getCourses']);
 
+    Route::put('/course/edit/{id}', [AdminController::class, 'updateCourse']);
+
     Route::get('/admins', [AdminController::class, 'getAdmins']);
 
     Route::delete('/course/remove/{id}', [AdminController::class, 'removeCourse']);
@@ -39,7 +39,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/students', [AdminController::class, 'getStudents']);
 
     Route::get('/student/{id}', [AdminController::class, 'getStudentById']);
-    
+
     Route::delete('/student/remove/{id}', [StudentController::class, 'destroy']);
 
     Route::get('/registrations', [AdminController::class, 'getRegistrations']);

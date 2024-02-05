@@ -21,7 +21,7 @@ class StudentsFactory extends Factory
             'profile_picture_url' => $this->faker->text(),
             'email' => $this->faker->safeEmail(),
             'phonenumber' => $this->faker->phoneNumber(),
-            'password' => $fname.$lname,
+            'password' => password_hash($fname.$lname, PASSWORD_DEFAULT),
             'type' => $this->faker->randomElement(['Regular', 'Extension'])
         ];
     }

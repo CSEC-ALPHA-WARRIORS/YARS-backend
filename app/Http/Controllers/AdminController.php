@@ -18,7 +18,7 @@ use App\Models\EmergencyContact;
 class AdminController extends Controller
 {
 
-    public function login(Request $request) 
+    public function login(Request $request)
     {
         $fields = $request->validate([
             'email' => 'required|email',
@@ -75,8 +75,8 @@ class AdminController extends Controller
         $request->validate([
             'fname' => 'required',
             'mname' => 'required',
-            'lname' => 'required', 
-            'email' => 'required', 
+            'lname' => 'required',
+            'email' => 'required',
             'phonenumber' => 'required',
             'role' => 'required'
         ]);
@@ -84,8 +84,8 @@ class AdminController extends Controller
         $data = [
             'fname' => $request['fname'],
             'mname' => $request['mname'],
-            'lname' => $request['lname'], 
-            'email' => $request['email'], 
+            'lname' => $request['lname'],
+            'email' => $request['email'],
             'phonenumber' => $request['phonenumber'],
             'password' => password_hash($request['fname'].$request['lname'], PASSWORD_DEFAULT),
             'role' => $request['role']
@@ -159,5 +159,11 @@ class AdminController extends Controller
         $payment = Payment::find($id);
         $payment->update(array('status' => 'verified'));
         return $payment;
+    }
+
+    function updateCourse(Request $request, string $id) {
+        $course = Courses::find($id);
+        $course->update($request->all());
+        return Corses::find($id);
     }
 }

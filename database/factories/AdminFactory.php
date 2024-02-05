@@ -11,16 +11,16 @@ class AdminFactory extends Factory
 
     public function definition(): array
     {
-        $fname = $this->faker->name();
-        $lname = $this->faker->name();
+        $fname = explode(' ', $this->faker->name())[0];
+        $lname = explode(' ', $this->faker->name())[0];
 
         return [
             'fname' => $fname,
-            'mname' => $this->faker->name(),
+            'mname' => explode(' ', $this->faker->name())[0],
             'lname' => $lname,
             'email' => $this->faker->safeEmail(),
             'phonenumber' => $this->faker->phoneNumber(),
-            'password' => $fname.$lname,
+            'password' => password_hash($fname.$lname, PASSWORD_DEFAULT),
             'role' => $this->faker->randomElement(['registrar_employee', 'registrar_head'])
         ];
     }
