@@ -140,9 +140,15 @@ Backend app for Yet Another Registration System made by using laravel.
 
 ```json
    {
+        "id": "id of the payment",
         "registration_id": "registration id",
-        "amount": "amount of money paid in the form of float",
-        "type": "chapa or manual"
+        "amount": "amount",
+        "paid_at": "paid date",
+        "type": "manual or chapa",
+        "status": "pending or verified",
+        "receipt_url": "receipt url",
+        "created_at": "created at",
+        "updated_at": "updated at" 
    }
 ```
 

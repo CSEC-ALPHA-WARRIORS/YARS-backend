@@ -17,6 +17,8 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::get('/registrations/{id}', [StudentController::class, 'getRegistration']);
 
     Route::post('/pay', [StudentController::class, 'pay']);
+
+    Route::put('/verify/{id}', [StudentController::class, 'verifyPayment']);
 });
 
 // Admin routes

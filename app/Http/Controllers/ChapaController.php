@@ -45,8 +45,9 @@ class ChapaController extends Controller
             return;
         }
 
+        return $payment['data']['checkout_url'];
 
-        return $payment['data']['checkout_url'].' '.$reference;
+        // return $payment['data']['checkout_url'].' '.$reference;
     }
 
      public function callback($reference)

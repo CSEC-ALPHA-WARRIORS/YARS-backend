@@ -94,6 +94,7 @@ class StudentController extends Controller
             'semester' => $request->all()['registration']['semester'],
             'program' => $request->all()['registration']['program'],
             'level' => $request->all()['registration']['level'],
+            'status' => 'pending',
             'registered_at' => date('Y-m-d', strtotime($request->all()['registration']['registered_at'])),
             'student_id' => $new_student['id']
         ];
@@ -147,11 +148,13 @@ class StudentController extends Controller
     }
 
     public function pay(Request $request) {
+        
         $request->validate([
             'registration_id' => 'required',
             'amount' => 'required',
             'type' => 'required',
         ]); 
+
         
         $url = '';
 
@@ -171,8 +174,8 @@ class StudentController extends Controller
             'paid_at' => $mytime->toDateTimeString(),
             'type' => $request['type'],
             'status' => 'pending',
-            'receipt_url' => isset($request['receipt_url']) ? isset($request['receipt_url']) 
-                             : 'http://localhost:8000/api/callback/'.explode(' ', $url)[1]
+            'receipt_url' => isset($request['receipt_url']) ? $request['receipt_url'] 
+                             : 'http://localhost:8000/api/callback/'
         ];
 
         $payment = Payment::create($data);
@@ -186,4 +189,9 @@ class StudentController extends Controller
         return Registration::where([['student_id', $id]])->get();
     }
 
+    function verifyPayment(string $id) {
+        $payment = Payment::find($id);
+        $payment->update(array('status' => 'verified'));
+        return $payment;
+    }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('emergency_contacts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id'); 
+            $table->unsignedBigInteger('student_id');
             $table->string('fname');
             $table->string('mname');
             $table->string('lname');
